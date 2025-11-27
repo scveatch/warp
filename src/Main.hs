@@ -4,12 +4,9 @@
 module Main (main) where 
 
 import Options.Applicative
--- import Options.Applicative (Parser, (<**>), command, execParser, info, fullDesc, progDesc, helper)
 import qualified Data.Text as T
 import Warp.Commands
 import System.Exit (die)
--- import Options.Applicative (subparser, progDesc, argument, metavar, execParser)
--- import qualified Data.Aeson.Types (Parser)
 
 data Command 
     = Add T.Text FilePath 

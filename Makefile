@@ -1,6 +1,5 @@
-
-
-.PHONY: build install clean test release 
+# Makefile -- automate some simple stack functions
+.PHONY: build clean test release 
 
 # Build the project
 build: 
