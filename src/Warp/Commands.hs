@@ -10,6 +10,9 @@ import Warp.Types
 import Warp.Storage
 import qualified Data.Text as T
 import System.Directory (makeAbsolute)
+import Data.Char (isAlphaNum)
+import System.Exit (die)
+
 
 ------------------------------
 -- Add Warp Point
@@ -18,7 +21,9 @@ import System.Directory (makeAbsolute)
 cmdAdd :: T.Text -> FilePath -> IO ()
 cmdAdd nm pth = do 
     absPath <- makeAbsolute pth
-    addPoint (WarpPoint nm absPath)
+    if isValidName nm 
+    then addPoint (WarpPoint nm absPath)
+    else die "Error: WarpPoint names must have at least one AlphaNumeric character"
 
 ------------------------------
 -- Remove Warp Point
@@ -48,4 +53,12 @@ cmdResolve nm = do
     maybeWP <- lookupPoint nm
     pure $ fmap path maybeWP
 
+
+----------------------------------
+-- Helper Functions
+----------------------------------
+
+-- String must have at least one AlphaNumeric character
+isValidName :: T.Text -> Bool
+isValidName = T.all isAlphaNum 
 
