@@ -7,7 +7,7 @@
 #   warp <name>               -> jump to a warp point
 
 # Path to compiled Haskell Binary
-WARP_BIN="warp-bin"
+WARP_BIN="$PWD/warp-bin"
 # WARP_BIN="$PWD/home/spencer/projects/warp/.stack-work/install/x86_64-linux/564e52e6df8f51aef529d8a08062b06ff21bd4e00b399c682c2f92bd548bf078/9.8.4/bin/warp-bin"
 
 warp(){

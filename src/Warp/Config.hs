@@ -2,7 +2,7 @@
 module Warp.Config (warpConfigPath, ensureDB) where 
 
 import System.Directory
-import System.FilePath (takeDirectory)
+import System.FilePath (takeDirectory, (</>))
 import Warp.Types
 import Data.Aeson (encode)
 import qualified Data.ByteString.Lazy as BL
@@ -11,7 +11,7 @@ import qualified Data.ByteString.Lazy as BL
 warpConfigPath :: IO FilePath
 warpConfigPath = do 
     home <- getHomeDirectory 
-    pure (home <> ".warp/points.json")
+    pure (home </> ".warp/points.json")
 
 ensureDB :: FilePath -> IO ()
 ensureDB pth = do
