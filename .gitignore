@@ -1,2 +1,5 @@
 # Ignore compiled items in stack-work
 .stack-work/
+
+# Ignore compiled items in release 
+./release/
