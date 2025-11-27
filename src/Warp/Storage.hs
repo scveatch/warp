@@ -57,7 +57,12 @@ removePoint nm = do
 lookupPoint :: T.Text -> IO (Maybe WarpPoint)
 lookupPoint nm = do findName nm <$> loadDB 
 
--- Helper 
+------------------------------
+-- Helper Functions
+------------------------------
+
+-- Search through WarpDB until name is found, 
+-- or none match 
 findName :: T.Text -> WarpDB -> Maybe WarpPoint
 findName nm [] = Nothing
 findName nm (x:xs) 
