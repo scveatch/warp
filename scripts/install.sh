@@ -12,7 +12,7 @@ set -euo pipefail
 
 # Config
 INSTALL_DIR="${HOME}/.local/bin"
-TMP_TAR="tmp/warp.tar.gz"
+TMP_TAR=$(mktemp -t warp-XXXXXX.tar.gz)
 REPO_API="https://api.github.com/repos/scveatch/warp/releases/latest"
 
 echo "=== Warp CLI Installer ==="
