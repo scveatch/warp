@@ -28,7 +28,7 @@ curl -sSL -o /tmp/warp.tar.gz "${REPO}"
 echo "Downloaded tar to /tmp/warp.tar.gz"
 
 # Unpack Tar 
-tar -tzf /tmp/warp.tar.gz -C "${INSTALL_DIR}"
+tar -xzf /tmp/warp.tar.gz -C "${INSTALL_DIR}"
 
 # Ensure Executable
 chmod +x "${INSTALL_DIR}/warp" "${INSTALL_DIR}/warp.sh"
