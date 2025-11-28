@@ -25,16 +25,18 @@ jobs:
 
       # 4. Prepare release artifacts
       - name: Prepare release
-        run: |
+        run:  |
           mkdir -p release
           cp $(stack path --local-install-root)/bin/warp release/warp
           cp scripts/warp.sh release/warp.sh
-          tar -czvf release/${GITHUB_REF##*/}.tar.gz -C release warp warp.sh
+          FILENAME="release/${GITHUB_REF##*/}.tar.gz"
+          tar -czvf "$FILENAME" -C release warp warp.sh
+          echo "RELEASE_FILE=$FILENAME" >> $GITHUB_ENV
 
       # 5. Create GitHub release and upload tarball
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: release/${GITHUB_REF##*/}.tar.gz
+          files: ${{ env.RELEASE_FILE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
