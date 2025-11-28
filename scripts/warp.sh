@@ -14,6 +14,13 @@
 # Path to compiled Haskell Binary
 WARP_BIN=~/.local/bin/warp
 
+# --------------- 
+# Command alias 
+# ---------------
+warp() {
+    _warp_main "$@"
+}
+
 # ---------------
 # Main Dispatcher
 # ---------------
@@ -55,20 +62,37 @@ _warp_main() {
     fi
 }
 
-_warp_complete() {
+
+# ------------------------------------
+# Tab completion for warp (bash + zsh)
+# ------------------------------------
+
+_warp_completions(){
     local cur points
+    WARP_COMMANDS="add remove list"
 
-    # Current word being completed
-    cur="${COMP_WORDS[COMP_CWORD]}"
+    # Bash 
+    if [ -n "${BASH_VERSION:-}" ]; then 
+        cur="${COMP_WORDS[COMP_CWORD]}"
+    # zsh
+    elif [ -n "${ZSH_VERSION:-}" ]; then
+        cur="${words[CURRENT]}"
+        emulate -L bash
+    else 
+        return
+    fi
 
-    # Ensure WARP_BIN is set (path to your warp binary)
-    : "${WARP_BIN:=warp}"
+    # List warp points
+    points=$("$WARP_BIN" list 2>/dev/null | awk -F: '{print $1}')
 
-    # List all warp points (extract only names)
-    points=$("$WARP_BIN" list | awk -F: '{print $1}')
+    options="$WARP_COMMANDS $points"
 
-    # Generate completions for the current word
-    COMPREPLY=( $(compgen -W "$points" -- "$cur") )
+    COMPREPLY=( $(compgen -W "$options" -- "$cur") ) 
 }
-# Attach the function to the 'warp' command
-complete -F _warp_complete warp
+
+# Register Completion
+if [ -n "${BASH_VERSION:-}" ]; then
+    complete -F _warp_completions warp
+else
+    compdef _warp_completions warp
+fi
