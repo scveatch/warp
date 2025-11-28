@@ -19,7 +19,7 @@ echo "=== Warp CLI Installer ==="
 
 # Check dependencies
 for tool in curl tar; do 
-    if ! command -v tool >/dev/null 2>&1; then 
+    if ! command -v $tool >/dev/null 2>&1; then 
         echo "Error: $tool is required to install Warp."
         exit 1 
     fi 
@@ -36,7 +36,7 @@ TAR_URL=$(curl -s "$REPO_API" \
     | cut -d '"' -f 4)
 
 # Download files
-curl -sSL -o "${TMP_TAR}" "${REPO}"
+curl -sSL -o "${TMP_TAR}" "${TAR_URL}"
 echo "Downloaded tar to ${TMP_TAR}"
 
 # Unpack Tar 
