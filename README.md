@@ -1,9 +1,17 @@
 # Warp 
 
+# Installation
+Run the following to automatically download the tool and add it to your path. You may need to run `source ~/.bashrc` to
+refresh your path.
+
+```
+curl -sSL https://github.com/scveatch/warp/raw/main/scripts/install.sh | bash
+```
+
 # Notes to self: 
-Currently, warp runs into permissions errors that need to be fixed, and the
-bash script responsible for running the program needs to have the executable in a findable place. 
-Beyond those limitations, this is minimally viable. 
+Permissions errors are fixed and release is tentatively stable. Need to configure for more machines -- tested 
+on a docker container running debian, but need to ensure configuration for alpine / mac. Then, extensions -- 
+yay!
 
 # Extensions: 
  - Keep track of commonly used directories to add to the program proactively. 
