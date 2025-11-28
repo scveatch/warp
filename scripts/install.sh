@@ -1,39 +1,54 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Warp Installer Script
-# 
-# Downloads the latest warp.sh and warp release assets from 
-# Github and installs them to ~/.local/bin
+# ---------------------------------------- 
+# Warp CLI Installer
+# ---------------------------------------- 
+# Downloads the latest release assets 
+# (warp + warp.sh) and installs them to 
+# ~/.local/bin. Ensures that warp.sh is 
+# sourced and ready for future use. 
+# ---------------------------------------- 
 
 # Config
 INSTALL_DIR="${HOME}/.local/bin"
-REPO=$(curl -s "https://api.github.com/repos/scveatch/warp/releases/latest" | \
-    grep "browser_download_url.*tar.gz" | \
-    cut -d '"' -f 4)
+TMP_TAR="tmp/warp.tar.gz"
+REPO_API="https://api.github.com/repos/scveatch/warp/releases/latest"
 
-# Check for curl existence:
-if ! command -v curl >/dev/null 2>&1; then
-    echo "Error: curl is required to install Warp."
-    exit 1
-fi
+echo "=== Warp CLI Installer ==="
+
+# Check dependencies
+for tool in curl tar; do 
+    if ! command -v tool >/dev/null 2>&1; then 
+        echo "Error: $tool is required to install Warp."
+        exit 1 
+    fi 
+done
 
 # Ensure install directory
 mkdir -p "${INSTALL_DIR}"
 
 echo "Installing Warp to ${INSTALL_DIR}"
 
+# Determine latest release tarbell
+TAR_URL=$(curl -s "$REPO_API" \
+    | grep "browser_download_url.*tar.gz" \
+    | cut -d '"' -f 4)
+
 # Download files
-curl -sSL -o /tmp/warp.tar.gz "${REPO}"
-echo "Downloaded tar to /tmp/warp.tar.gz"
+curl -sSL -o "${TMP_TAR}" "${REPO}"
+echo "Downloaded tar to ${TMP_TAR}"
 
 # Unpack Tar 
-tar -xzf /tmp/warp.tar.gz -C "${INSTALL_DIR}"
+tar -xzf "${TMP_TAR}" -C "${INSTALL_DIR}"
 
 # Ensure Executable
 chmod +x "${INSTALL_DIR}/warp" "${INSTALL_DIR}/warp.sh"
 
-# Add install dir to PATH for this session if not already present
+# Source warp.sh 
+source "${INSTALL_DIR}/warp.sh"
+
+# Update path for current session
 if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
     export PATH="$INSTALL_DIR:$PATH"
     echo "Added $INSTALL_DIR to PATH for current session."
@@ -47,9 +62,24 @@ elif [ -n "$ZSH_VERSION" ]; then
     SHELL_RC="${HOME}/.zshrc"
 fi
 
-if [ -n "$SHELL_RC" ] && ! grep -q "$INSTALL_DIR" "$SHELL_RC"; then
-    echo "export PATH=\"$INSTALL_DIR:\$PATH\"" >> "$SHELL_RC"
-    echo "Added $INSTALL_DIR to PATH in $SHELL_RC. Restart your shell or run 'source $SHELL_RC'."
+if [ -n "$SHELL_RC" ]; then
+    # Add source line if not already present
+    if ! grep -Fxq "source \"$INSTALL_DIR/warp.sh\"" "$SHELL_RC"; then
+        echo "" >> "$SHELL_RC"
+        echo "# Warp CLI shell functions" >> "$SHELL_RC"
+        echo "source \"$INSTALL_DIR/warp.sh\"" >> "$SHELL_RC"
+        echo "Added source line to $SHELL_RC. Run 'source $SHELL_RC' or restart your shell."
+    fi
+
+    # Source now for immediate availability
+    source "$INSTALL_DIR/warp.sh"
 fi
 
-echo "Warp installation complete! You can now run 'warp' from your terminal."
+# Cleanup
+rm -f "$TMP_TAR"
+
+echo "===================================="
+echo "Warp CLI installation complete!"
+echo "You can now run 'warp' from your shell."
+echo "Try: warp add <name> <path>, warp list, warp <name>"
+echo "===================================="
