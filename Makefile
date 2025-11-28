@@ -23,7 +23,7 @@ release: build
 	BIN=$$(stack path --local-install-root)/bin/warp-bin ; \
 		cp $$BIN release/warp-bin
 	cp scripts/warp.sh release/warp.sh
-	tar -czvf $(RELEASE_DIR)/warp-v0.1.0.tar.gz -C $(RELEASE_DIR) $(FILES)
-	@echo "Release package created at $(RELEASE_DIR)/warp-v0.1.0.tar.gz"
+	tar -czvf $(RELEASE_DIR)/$(VERSION).tar.gz -C $(RELEASE_DIR) $(FILES)
+	@echo "Release package created at $(RELEASE_DIR)/$(VERSION).tar.gz"
 	# chmod +x release/warp.sh
 	# echo "Release prepared in ./release"
