@@ -3,7 +3,7 @@
 
 RELEASE_DIR=release
 VERSION=$(shell git describe --tags --always)
-FILES=warp-bin warp.sh
+FILES=warp warp.sh
 
 # Build the project
 build: 
@@ -20,8 +20,8 @@ test:
 
 release: build 
 	mkdir -p release 
-	BIN=$$(stack path --local-install-root)/bin/warp-bin ; \
-		cp $$BIN release/warp-bin
+	BIN=$$(stack path --local-install-root)/bin/warp ; \
+		cp $$BIN release/warp
 	cp scripts/warp.sh release/warp.sh
 	tar -czvf $(RELEASE_DIR)/$(VERSION).tar.gz -C $(RELEASE_DIR) $(FILES)
 	@echo "Release package created at $(RELEASE_DIR)/$(VERSION).tar.gz"

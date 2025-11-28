@@ -47,7 +47,7 @@ _warp_complete() {
     cur="${COMP_WORDS[COMP_CWORD]}"
 
     # Ensure WARP_BIN is set (path to your warp binary)
-    : "${WARP_BIN:=warp-bin}"
+    : "${WARP_BIN:warp}"
 
     # List all warp points (extract only names)
     points=$("$WARP_BIN" list | awk -F: '{print $1}')
