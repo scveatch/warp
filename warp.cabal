@@ -15,7 +15,7 @@ build-type:          Simple
 extra-source-files:  README.md
                      CHANGELOG.md
 
-executable warp-bin
+executable warp
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010

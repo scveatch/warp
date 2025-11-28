@@ -7,8 +7,7 @@
 #   warp <name>               -> jump to a warp point
 
 # Path to compiled Haskell Binary
-WARP_BIN="$PWD/warp-bin"
-# WARP_BIN="$PWD/home/spencer/projects/warp/.stack-work/install/x86_64-linux/564e52e6df8f51aef529d8a08062b06ff21bd4e00b399c682c2f92bd548bf078/9.8.4/bin/warp-bin"
+WARP_BIN="$PWD/warp"
 
 warp(){
     # Warp Add
@@ -42,13 +41,19 @@ warp(){
 }
 
 _warp_complete() {
-    local cur
+    local cur points
+
+    # Current word being completed
     cur="${COMP_WORDS[COMP_CWORD]}"
-    # List all warp points from the Haskell binary
-    local points
-    points=$("$WARP_BIN" list | awk '{print $1}')  # assuming 'name: path'
+
+    # Ensure WARP_BIN is set (path to your warp binary)
+    : "${WARP_BIN:=warp-bin}"
+
+    # List all warp points (extract only names)
+    points=$("$WARP_BIN" list | awk -F: '{print $1}')
+
+    # Generate completions for the current word
     COMPREPLY=( $(compgen -W "$points" -- "$cur") )
 }
-
+# Attach the function to the 'warp' command
 complete -F _warp_complete warp
-
