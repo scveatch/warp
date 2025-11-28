@@ -1,0 +1,40 @@
+name: Warp Release
+
+on: 
+  push: 
+    tags: 
+      - 'v*.*.*.*'
+
+jobs: 
+  release: 
+    runs-on: ubuntu-latest
+
+      steps:
+      # 1. Check out the repository
+      - uses: actions/checkout@v3
+
+      # 2. Set up Haskell/Stack
+      - uses: haskell/actions/setup@v2
+        with:
+          ghc-version: 9.6.1
+          stack-version: 2.12.0
+
+      # 3. Build your project
+      - name: Build warp
+        run: stack build --copy-bins
+
+      # 4. Prepare release artifacts
+      - name: Prepare release
+        run: |
+          mkdir -p release
+          cp $(stack path --local-install-root)/bin/warp release/warp
+          cp scripts/warp.sh release/warp.sh
+          tar -czvf release/${GITHUB_REF##*/}.tar.gz -C release warp warp.sh
+
+      # 5. Create GitHub release and upload tarball
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/${GITHUB_REF##*/}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
