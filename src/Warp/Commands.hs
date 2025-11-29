@@ -2,6 +2,7 @@
 module Warp.Commands (
       cmdAdd
     , cmdRemove 
+    , cmdRename 
     , cmdList
     , cmdResolve
 ) where
@@ -12,6 +13,7 @@ import qualified Data.Text as T
 import System.Directory (makeAbsolute)
 import Data.Char (isAlphaNum)
 import System.Exit (die)
+import Control.Monad (unless)
 
 
 ------------------------------
@@ -32,6 +34,17 @@ cmdAdd nm pth = do
 cmdRemove :: T.Text -> IO ()
 cmdRemove = removePoint -- delegates to Warp.Storage
 
+
+------------------------------
+-- Rename a Warp Point
+------------------------------
+
+cmdRename :: T.Text -> T.Text -> IO ()
+cmdRename old new = do 
+    ok <- renamePoint old new 
+    unless ok $ 
+        die "Error: WarpPoint not found"
+    
 ------------------------------
 -- List Warp Points
 ------------------------------
