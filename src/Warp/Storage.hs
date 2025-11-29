@@ -6,6 +6,7 @@ module Warp.Storage (
     , addPoint 
     , removePoint
     , lookupPoint
+    , renamePoint 
 ) where
 
 import Warp.Types 
@@ -56,6 +57,16 @@ removePoint nm = do
 
 lookupPoint :: T.Text -> IO (Maybe WarpPoint)
 lookupPoint nm = do findName nm <$> loadDB 
+
+renamePoint :: T.Text -> T.Text -> IO Bool
+renamePoint old new = do 
+    db <- loadDB 
+    case break ((==old) . name) db of 
+        (_, []) -> return False
+        (before, wp:after) -> do 
+            let renamed = wp {name = new}
+            saveDB (before ++ renamed:after)
+            return True
 
 ------------------------------
 -- Helper Functions
