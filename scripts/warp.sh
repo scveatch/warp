@@ -17,9 +17,8 @@ WARP_BIN=~/.local/bin/warp
 # --------------- 
 # Command alias 
 # ---------------
-warp() {
-    _warp_main "$@"
-}
+warp() { _warp_main "$@"; }
+wp()   { _warp_main "$@"; }
 
 # ---------------
 # Main Dispatcher
@@ -87,12 +86,18 @@ _warp_completions(){
 
     options="$WARP_COMMANDS $points"
 
-    COMPREPLY=( $(compgen -W "$options" -- "$cur") ) 
+    if [[ -z "$cur" ]]; then
+        COMPREPLY=( $options )
+    else
+        COMPREPLY=( $(compgen -W "$options" -- "$cur") )
+    fi
 }
 
 # Register Completion
 if [ -n "${BASH_VERSION:-}" ]; then
     complete -F _warp_completions warp
-else
+    complete -F _warp_completions wp
+elif [ -n "${ZSH_VERSION:-}" ]; then
     compdef _warp_completions warp
+    compdef _warp_completions wp
 fi
