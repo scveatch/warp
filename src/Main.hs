@@ -13,7 +13,6 @@ data Command
     | Remove FilePath
     | List 
     | Jump T.Text
-    | Rename T.Text T.Text
 
 
 cmdParser :: Parser Command
@@ -21,7 +20,6 @@ cmdParser = subparser
     ( command "add" (info addParser (progDesc "Add a Warp Point"))
    <> command "remove" (info removeParser (progDesc "Remove a Warp Point"))
    <> command "list" (info (pure List) (progDesc "List all Warp Points"))
-   <> command "rename" (info renameParser (progDesc "Rename a Warp Point"))
    )
    <|> jumpParser -- default to Jump <name>
 
@@ -38,11 +36,6 @@ removeParser :: Parser Command
 removeParser = Remove
     <$> argument str (metavar "NAME")
 
-renameParser :: Parser Command
-renameParser = Rename 
-    <$> argument str (metavar "OLD_NAME")
-    <*> argument str (metavar "NEW_NAME")
-
 jumpParser :: Parser Command 
 jumpParser = Jump <$> argument str (metavar "NAME")
 
@@ -56,7 +49,6 @@ runCommand cmd = case cmd of
     Add name path       -> cmdAdd name path
     Remove name         -> cmdRemove (T.pack name)
     List                -> cmdList  
-    Rename old new      -> cmdRename old new 
     Jump name           -> cmdResolve name >>= \case 
                                 Just path -> putStrLn path
                                 Nothing   -> die $ "Warp Point not found" ++ T.unpack name
