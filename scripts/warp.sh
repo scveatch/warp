@@ -68,7 +68,7 @@ _warp_main() {
 
 _warp_completions(){
     local cur points
-    WARP_COMMANDS="add remove list"
+    WARP_COMMANDS="add remove rename list"
 
     # Bash 
     if [ -n "${BASH_VERSION:-}" ]; then 
