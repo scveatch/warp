@@ -40,6 +40,13 @@ _warp_main() {
         return 
     fi 
 
+    # --- warp rename <old_name> <new_name> --- 
+    if [ "$cmd" = "rename" ]; then 
+        "$WARP_BIN" rename "$2" "$3"
+        return 
+    fi 
+
+
     # --- warp list --- 
     if [ "$cmd" = "list" ]; then 
         "$WARP_BIN" list
